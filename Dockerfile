@@ -118,7 +118,7 @@ RUN \
   && mv linux-amd64/helm /usr/local/bin/helm \
   && rm helm-v${HELM_VERSION}-linux-amd64.tar.gz
 
-ENV MINIKUBE_VERSION=0.22.2
+ENV MINIKUBE_VERSION=0.22.333
 
 RUN \
   curl -Lo minikube https://storage.googleapis.com/minikube/releases/v${MINIKUBE_VERSION}/minikube-linux-amd64 \
@@ -147,4 +147,4 @@ RUN \
   apt-get install -y docker-ce
 
 RUN \
-  pip install cli-pipeline==1.2.28
+  pip install cli-pipeline==1.2.31
