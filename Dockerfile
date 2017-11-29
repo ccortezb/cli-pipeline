@@ -20,7 +20,7 @@ ENV \
 RUN \
   conda install --yes openblas scikit-learn numpy scipy ipython jupyter matplotlib pandas
 
-ENV KUBERNETES_VERSION=1.8.2
+ENV KUBERNETES_VERSION=1.8.4
 ENV KUBERNETES_HOME=/root/kubernetes/
 
 RUN \
@@ -44,7 +44,7 @@ RUN \
 #ENV \
 #  PATH=$KUBERNETES_HOME/client/bin:$PATH
 
-ENV KOPS_VERSION=1.7.1
+ENV KOPS_VERSION=1.8.0-beta.1
 ENV KOPS_HOME=/root/kops/
 
 RUN \
@@ -58,7 +58,7 @@ ENV \
   PATH=$KOPS_HOME:$PATH
 
 ENV \
-  TERRAFORM_VERSION=0.10.8
+  TERRAFORM_VERSION=0.11.0
 
 ENV \
   TERRAFORM_HOME=/root/terraform
@@ -76,6 +76,7 @@ ENV \
 RUN \
   apt-get update
 
+# Install AWS CLI
 RUN \
   pip install --upgrade awscli
 
@@ -85,9 +86,9 @@ RUN \
 RUN \
   pip install --upgrade appdirs
 
-#RUN \
-#  curl https://sdk.cloud.google.com | bash 
-
+# Install Google Cloud SDK
+# Note:  This includes kubectl and others that may be older version.   
+#        We will override these versions later.
 RUN \
   echo "deb http://packages.cloud.google.com/apt cloud-sdk-$(lsb_release -c -s) main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
 
@@ -106,25 +107,33 @@ RUN \
   && apt-get update \
   && apt-get install -y azure-cli 
 
+# Create empty ~/.kube directory.
+# Note:  This is where the Kubernetes config is stored by default
 RUN \
   mkdir -p ~/.kube
 
+# Install Helm
 ENV \
-  HELM_VERSION=2.7.0
-
+  HELM_VERSION=2.7.2
 RUN \
   wget https://storage.googleapis.com/kubernetes-helm/helm-v${HELM_VERSION}-linux-amd64.tar.gz \
   && tar -zxvf helm-v${HELM_VERSION}-linux-amd64.tar.gz \
   && mv linux-amd64/helm /usr/local/bin/helm \
   && rm helm-v${HELM_VERSION}-linux-amd64.tar.gz
 
+# Install Minikube
 ENV MINIKUBE_VERSION=0.23.0
-
 RUN \
   curl -Lo minikube https://storage.googleapis.com/minikube/releases/v${MINIKUBE_VERSION}/minikube-linux-amd64 \
   && chmod a+x minikube \
   && mv minikube /usr/local/bin/
 
+# Install Istio
+ENV ISTIO_VERSION=0.2.12
+RUN \
+  curl -L https://git.io/getLatestIstio | ISTIO_VERSION=${ISTIO_VERSION} sh - 
+
+# Install Docker
 RUN \
   apt-get install -y \
     apt-transport-https \
@@ -144,5 +153,6 @@ RUN \
 RUN \
   apt-get install -y docker-ce
 
+ENV PIPELINE_CLI_VERSION=1.4.16
 RUN \
-  pip install cli-pipeline==1.3.11
+  pip install cli-pipeline==${PIPELINE_CLI_VERSION}

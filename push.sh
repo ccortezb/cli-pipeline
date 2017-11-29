@@ -1,1 +1,1 @@
-docker push pipelineai/kubernetes:master
+docker push pipelineai/cli-docker:master
