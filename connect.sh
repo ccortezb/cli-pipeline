@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker exec -it cli-docker bash 
+docker exec -it cli-pipeline bash 

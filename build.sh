@@ -1,1 +1,1 @@
-docker build -t pipelineai/cli-docker:master -f Dockerfile .
+docker build -t pipelineai/cli-pipeline:master -f Dockerfile .
