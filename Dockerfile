@@ -1,4 +1,4 @@
-FROM pipelineai/ubuntu:16.04-cpu-master
+FROM pipelineai/ubuntu:master-16.04-cpu
 
 WORKDIR /root
 
@@ -129,7 +129,7 @@ RUN \
   && mv minikube /usr/local/bin/
 
 # Install Istio
-ENV ISTIO_VERSION=0.2.12
+ENV ISTIO_VERSION=0.3.0
 RUN \
   curl -L https://git.io/getLatestIstio | ISTIO_VERSION=${ISTIO_VERSION} sh - 
 
